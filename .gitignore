@@ -9,7 +9,6 @@ build/
 .vscode/
 .idea/
 .vercel/
-node_modules
 .next
 out
 .DS_Store
