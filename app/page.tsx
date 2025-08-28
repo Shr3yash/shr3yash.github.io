@@ -227,7 +227,7 @@ export default function HomePage() {
           {FEATURED.map((p, i) => (
             <GlassTile key={i} tone={(['indigo','purple','emerald','amber'] as const)[i % 4]}>
               <div className="flex items-start justify-between gap-3">
-                <h3 className="text-lg font-semibold">{p.name ?? p.title}</h3>
+                <h3 className="text-lg font-semibold">{p.name}</h3>
                 <div className="flex gap-2 text-xs">
                   {p.repo && (
                     <a className="rounded-lg p-2 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/60" href={p.repo} target="_blank" rel="noreferrer" aria-label="Repository">
