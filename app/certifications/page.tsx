@@ -152,8 +152,8 @@ export default function CertificationsPage() {
       <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-100 md:text-3xl">Certifications</h1>
         <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-          Ordered by reputation: vendor credentials first, then strong professional/university courses, followed by
-          internal & compliance. All images are read from <code className="rounded bg-white/10 px-1 py-0.5">/public/images</code>.
+          Ordered by: vendor credentials first, then strong professional/university courses, followed by
+          internal & general.
         </p>
 
         {/* 1) Top credentials */}
@@ -167,13 +167,13 @@ export default function CertificationsPage() {
         {/* 3) Internal / Compliance (collapsible) */}
         <details className="mt-10">
           <summary className="cursor-pointer text-lg font-medium tracking-tight text-zinc-200 hover:opacity-90">
-            Internal & Compliance (tap to expand)
+            Internal & Misc. (tap to expand)
           </summary>
           <Grid items={CERTS_COMPLIANCE} />
         </details>
 
         <p className="mt-8 text-xs text-zinc-500">
-          Want a different order or grouping? Tell me what to move up/down and I’ll reshuffle instantly.
+            Will be updating soon
         </p>
       </main>
 
