@@ -299,7 +299,7 @@ export default function HomePage() {
               <input required type="email" name="email" placeholder="Email" className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900" />
               <textarea required name="message" placeholder="Message" rows={5} className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900" />
               <button className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100">Send Message</button>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">to replace <code>your_form_id</code> with my Formspree ID.</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">to replace <code> my form id </code> with my Formspree ID.</p>
             </form>
           </GlassTile>
 
