@@ -15,21 +15,20 @@ export default function Nav() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 w-full">
+    <header className="sticky top-0 z-[200] w-full">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <nav
           className={[
-            'mt-4 mb-4 flex items-center justify-between rounded-2xl px-3 py-2 text-sm backdrop-blur-md ring-1 ring-inset',
-            // light mode
-            'border-zinc-900/10 bg-white/60 text-zinc-800 ring-black/5',
-            // dark mode
-            'dark:border-white/10 dark:bg-white/5 dark:text-zinc-200 dark:ring-white/5',
+            'mt-4 mb-4 flex items-center justify-between rounded-2xl',
+            'border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-200',
+            'backdrop-blur-md ring-1 ring-inset ring-white/5',
+            'relative isolate pointer-events-auto', // <- create a stacking context & ensure clicks are allowed
           ].join(' ')}
         >
           {/* Brand */}
           <Link
             href="/"
-            className="rounded-xl px-2 py-1 font-medium text-zinc-900 hover:bg-zinc-900/5 dark:text-zinc-100 dark:hover:bg-white/10"
+            className="rounded-xl px-2 py-1 font-medium text-zinc-100 hover:bg-white/5"
           >
             Shreyash&apos; Portfolio
           </Link>
@@ -45,8 +44,8 @@ export default function Nav() {
                   className={[
                     'rounded-xl px-3 py-1.5',
                     active
-                      ? 'bg-zinc-900/10 text-zinc-900 dark:bg-white/10 dark:text-white'
-                      : 'text-zinc-700 hover:bg-zinc-900/5 dark:text-zinc-200 dark:hover:bg-white/10',
+                      ? 'bg-white/10 text-white'
+                      : 'text-zinc-200 hover:bg-white/10',
                   ].join(' ')}
                 >
                   {l.label}
@@ -61,7 +60,7 @@ export default function Nav() {
               href="https://github.com/Shr3yash"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden rounded-xl px-3 py-1.5 text-zinc-700 hover:bg-zinc-900/5 dark:text-zinc-200 dark:hover:bg-white/10 sm:inline-block"
+              className="hidden rounded-xl px-3 py-1.5 text-zinc-200 hover:bg-white/10 sm:inline-block"
             >
               GitHub
             </a>
@@ -69,11 +68,15 @@ export default function Nav() {
               href="https://www.linkedin.com/in/shr3yash/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden rounded-xl px-3 py-1.5 text-zinc-700 hover:bg-zinc-900/5 dark:text-zinc-200 dark:hover:bg-white/10 sm:inline-block"
+              className="hidden rounded-xl px-3 py-1.5 text-zinc-200 hover:bg-white/10 sm:inline-block"
             >
               LinkedIn
             </a>
-            <ThemeToggle />
+
+            {/* Force the toggle above any stray overlays */}
+            <div className="relative z-[300] pointer-events-auto">
+              <ThemeToggle />
+            </div>
           </div>
         </nav>
       </div>
