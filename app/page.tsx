@@ -18,7 +18,7 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 
 const HERO_IMAGE =
-  "https://raw.githubusercontent.com/Shr3yash/Shr3yash//main/imgs/IMG_9887.jpg";
+  "https://raw.githubusercontent.com/Shr3yash/Shr3yash//main/imgs/Suits.jpg";
 const MotionImage = motion(Image);
 
 // ---------- Shared UI ----------
