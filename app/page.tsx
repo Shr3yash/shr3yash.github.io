@@ -172,10 +172,12 @@ export default function HomePage() {
               className="mt-6"
             >
               <GlassTile tone="indigo" size="sm">
-                <p className="text-zinc-800 dark:text-zinc-100">
+                <p className="text-zinc-800 dark:text-zinc-100 text-justify">
                   {" "}
-                  We engineers are not solely computer scientists, philosophers,
-                  physicists, or analysts. We are a mosaic of our knowledge,
+                  I believe engineers are not merely computer scientists, philosophers,
+                  physicists, or analysts. We are humans above everything and
+                  what makes us human is our ability to create things that improve the lives of others.
+                  We are a mosaic of our knowledge,
                   applying what we know like painting with colors we have on our
                   palette, to blend into one masterpiece. A solution.
                 </p>
