@@ -147,7 +147,7 @@ export default function Page() {
           </GlassTile>
 
           <GlassTile i={1}>
-            <h2 className="text-lg font-semibold text-zinc-100">Research internship (Nibha Tech)</h2>
+            <h2 className="text-lg font-semibold text-zinc-100">Research Work during Undergrad (Nibha Tech)</h2>
             <p className="mt-1 text-sm text-zinc-400">Dec 2022 – May 2023 • Nashik, India</p>
             <div className="prose prose-invert mt-3 max-w-none text-zinc-300">
               <p>

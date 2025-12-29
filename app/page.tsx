@@ -373,7 +373,7 @@ export default function HomePage() {
           <a href="/blog" className="block" aria-label="Open blog">
             <GlassTile tone="emerald">
               <h3 className="text-lg font-semibold">
-                Nibha Tech — AI Research Intern
+                Nibha Tech — AI Research during Bachelors
               </h3>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Dec 2022 – May 2023
