@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<!--
+  Hi. If you're reading this, you're probably the kind of person I'd like to work with.
+
+  One HTML file. No framework, no bundler, no build step, no analytics, no JavaScript
+  dependencies. The only external requests are two font families and the résumé PDF.
+  The hero is a 2D canvas (~90 lines). The partition game near the bottom is plain DOM
+  plus a scenario table (~150 lines). Nothing is minified, because nothing needs to be.
+
+  Questions, bugs, or a job: bhatkar3@illinois.edu
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shreyash Bhatkar | Distributed Systems &amp; ML Infrastructure</title>
+<meta name="description" content="Software engineer working on distributed AI systems and multi-GPU training/inference infrastructure at UIUC. Previously built production backend systems at Oracle handling 10M+ transactions a day.">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Shreyash Bhatkar | Distributed Systems &amp; ML Infrastructure">
+<meta property="og:description" content="Distributed AI systems, multi-GPU training and inference infrastructure. MS CS at UIUC; previously Oracle.">
+<meta property="og:url" content="https://shr3yash.github.io/">
+<meta property="og:image" content="https://shr3yash.github.io/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Shreyash Bhatkar — Making distributed systems agree with each other.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shreyash Bhatkar | Distributed Systems &amp; ML Infrastructure">
+<meta name="twitter:description" content="Distributed AI systems, multi-GPU training and inference infrastructure. MS CS at UIUC; previously Oracle.">
+<meta name="twitter:image" content="https://shr3yash.github.io/assets/og-card.png">
+<link rel="canonical" href="https://shr3yash.github.io/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Shreyash Bhatkar",
+  "url": "https://shr3yash.github.io/",
+  "email": "mailto:bhatkar3@illinois.edu",
+  "jobTitle": "Graduate Researcher, Systems & Runtime Engineering",
+  "description": "Software engineer working on distributed AI systems and ML infrastructure: multi-GPU training, inference serving, and backend systems at scale.",
+  "worksFor": { "@type": "Organization", "name": "Supercomputing Systems & AI Lab, University of Illinois Urbana-Champaign" },
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "University of Illinois Urbana-Champaign" },
+    { "@type": "CollegeOrUniversity", "name": "University of Pune" }
+  ],
+  "address": { "@type": "PostalAddress", "addressLocality": "Champaign", "addressRegion": "IL", "addressCountry": "US" },
+  "sameAs": [ "https://github.com/Shr3yash", "https://www.linkedin.com/in/shr3yash/" ],
+  "knowsAbout": [ "Distributed systems", "ML infrastructure", "GPU programming", "CUDA", "PyTorch", "Reinforcement learning systems", "LLM inference", "C++", "Python", "Kubernetes", "Kafka", "gRPC" ]
+}
+</script>
+<script>document.documentElement.className += ' js';</script>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0B0E14">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%230B0E14'/%3E%3Cline x1='9' y1='11' x2='16' y2='22' stroke='%233A4152' stroke-width='1.4'/%3E%3Cline x1='23' y1='11' x2='16' y2='22' stroke='%233A4152' stroke-width='1.4'/%3E%3Cline x1='9' y1='11' x2='23' y2='11' stroke='%233A4152' stroke-width='1.4'/%3E%3Ccircle cx='9' cy='11' r='2.3' fill='%2358D6C4'/%3E%3Ccircle cx='23' cy='11' r='2.3' fill='%2358D6C4'/%3E%3Ccircle cx='16' cy='22' r='2.6' fill='%23EA6090'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E14; --bg-1:#10141d; --bg-2:#161c28;
+    --line:rgba(232,234,237,0.09); --line-strong:rgba(232,234,237,0.17);
+    --text:#E9EBEF; --text-dim:#A3ACBC; --text-faint:#788499;
+    --accent:#EA6090; --accent-soft:rgba(234,96,144,0.13);
+    --accent-2:#57D6C6; --accent-2-soft:rgba(87,214,198,0.13);
+    --radius-sm:6px; --radius:12px; --maxw:1140px; --gutter:clamp(1.25rem,4vw,3rem);
+    --font-display:"Bricolage Grotesque",-apple-system,"Helvetica Neue",Arial,sans-serif;
+    --font-mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-display);font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  h1,h2,h3{font-family:var(--font-display);}
+  img,canvas,svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  ul{margin:0;}
+  ::selection{background:var(--accent-soft);color:var(--text);}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);}
+  .skip{position:absolute;left:-999px;top:0.5rem;z-index:200;background:var(--accent);color:#160910;padding:0.6rem 1rem;border-radius:6px;font-weight:600;}
+  .skip:focus{left:0.5rem;}
+
+  /* NAV */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem var(--gutter);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:background .4s var(--ease),border-color .4s,padding .35s var(--ease);}
+  .nav.scrolled{background:rgba(11,14,20,0.74);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-bottom-color:var(--line);padding-block:0.8rem;}
+  .nav-mark{font-family:var(--font-mono);font-size:0.95rem;display:flex;align-items:center;gap:0.6rem;}
+  .nav-mark svg{width:22px;height:22px;}
+  .nav-links{display:flex;gap:2rem;list-style:none;margin:0;padding:0;}
+  .nav-links a{font-size:0.93rem;color:var(--text-dim);position:relative;padding-block:0.2rem;transition:color .25s;}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-3px;width:100%;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);}
+  .nav-links a:hover,.nav-links a.active{color:var(--text);}
+  .nav-links a.active::after,.nav-links a:hover::after{transform:scaleX(1);}
+  .nav-right{display:flex;align-items:center;gap:1.3rem;}
+  .nav-social{display:flex;gap:1rem;align-items:center;}
+  .nav-social a{color:var(--text-dim);transition:color .25s;}
+  .nav-social a:hover{color:var(--accent-2);}
+  .nav-social svg{width:18px;height:18px;}
+  .nav-toggle{display:none;background:none;border:1px solid var(--line-strong);border-radius:6px;width:38px;height:38px;color:var(--text);cursor:pointer;align-items:center;justify-content:center;}
+  .mobile-nav{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:2rem var(--gutter);gap:1.5rem;}
+  .mobile-nav[hidden]{display:none;}
+  .mobile-nav a{font-size:1.8rem;color:var(--text);}
+  .mobile-nav .nav-social{margin-top:0.6rem;}
+  @media (max-width:780px){.nav-links{display:none;}.nav-toggle{display:flex;}}
+
+  /* HERO */
+  .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:6rem;overflow:hidden;}
+  #topology{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+  .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,var(--bg) 0%,var(--bg) 28%,rgba(11,14,20,.55) 50%,rgba(11,14,20,.04) 72%);}
+  @media (max-width:780px){.hero-scrim{background:linear-gradient(180deg,rgba(11,14,20,.35) 0%,var(--bg) 62%);}}
+  .hero-inner{position:relative;z-index:2;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;}
+  .status-line{font-family:var(--font-mono);font-size:0.84rem;color:var(--text-dim);margin:0 0 1.5rem;display:flex;align-items:center;gap:0.6rem;}
+  .status-line .pulse{width:7px;height:7px;border-radius:50%;background:#5FE07A;position:relative;flex:none;}
+  .status-line .pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid #5FE07A;animation:pulsering 2.4s infinite;}
+  @keyframes pulsering{0%{transform:scale(.6);opacity:1;}100%{transform:scale(2);opacity:0;}}
+  .hero h1{font-weight:700;font-size:clamp(2.4rem,6.2vw,5rem);line-height:1.05;letter-spacing:-0.01em;max-width:15ch;margin:0 0 1.6rem;}
+  .hero h1 .line{display:block;overflow:hidden;padding-bottom:.08em;}
+  .js .hero h1 .line span{display:inline-block;transform:translateY(115%);animation:riseIn .85s var(--ease) forwards;}
+  @keyframes riseIn{to{transform:translateY(0);}}
+  .hero p.lede{font-size:clamp(1.05rem,1.6vw,1.22rem);color:var(--text-dim);max-width:52ch;margin:0 0 2.2rem;}
+  .hero p.lede b{color:var(--text);font-weight:600;}
+  .cta-row{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;}
+  .cta-row .quiet{font-size:0.92rem;color:var(--text-dim);margin-left:0.6rem;display:flex;gap:1.1rem;}
+  .cta-row .quiet a:hover{color:var(--accent-2);}
+  .btn{font-weight:600;font-size:0.95rem;padding:0.85rem 1.5rem;border-radius:var(--radius-sm);border:1px solid var(--line-strong);transition:all .25s var(--ease);display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;font-family:var(--font-display);}
+  .btn-primary{background:var(--accent);border-color:var(--accent);color:#160910;}
+  .btn-primary:hover{background:#f27ba9;transform:translateY(-2px);box-shadow:0 10px 26px rgba(234,96,144,0.25);}
+  .btn-ghost{background:transparent;color:var(--text);}
+  .btn-ghost:hover{border-color:var(--text-dim);background:var(--bg-1);}
+
+  /* PROOF STRIP */
+  .proof{position:relative;z-index:2;border-top:1px solid var(--line);background:rgba(11,14,20,.82);}
+  .proof-inner{max-width:var(--maxw);margin-inline:auto;padding:1.3rem var(--gutter);display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
+  .proof-inner div b{display:block;font-size:1.45rem;font-weight:700;line-height:1.1;}
+  .proof-inner div span{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);}
+  @media (max-width:780px){.proof-inner{grid-template-columns:repeat(2,1fr);}}
+
+  /* SECTIONS */
+  .section{padding:6rem 0;position:relative;border-top:1px solid var(--line);}
+  .section-head{max-width:640px;margin-bottom:2.8rem;}
+  .section-head h2{font-size:clamp(1.7rem,3.2vw,2.4rem);margin:0 0 0.9rem;line-height:1.16;letter-spacing:-.01em;font-weight:700;}
+  .section-head p{color:var(--text-dim);font-size:1.04rem;max-width:60ch;margin:0;}
+  .reveal{opacity:1;transform:none;}
+  .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .85s var(--ease),transform .85s var(--ease);}
+  .js .reveal.in-view{opacity:1;transform:none;}
+
+  /* CASE STUDIES */
+  .case{display:grid;grid-template-columns:1fr 1fr;gap:2.6rem;padding:2.6rem 0;border-top:1px solid var(--line);align-items:start;}
+  .case:last-child{border-bottom:1px solid var(--line);}
+  .case-text h3{font-size:1.55rem;margin:0 0 0.35rem;font-weight:700;letter-spacing:-.01em;}
+  .case-text .where{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-faint);margin-bottom:1.4rem;}
+  .case-text dl{margin:0;display:grid;grid-template-columns:110px 1fr;gap:0.75rem 1.2rem;}
+  .case-text dt{font-family:var(--font-mono);font-size:0.78rem;color:var(--accent-2);padding-top:0.2rem;}
+  .case-text dd{margin:0;color:var(--text-dim);font-size:0.97rem;}
+  .case-text dd b{color:var(--text);font-weight:600;}
+  .case-links{display:flex;flex-wrap:wrap;gap:0.5rem 1.3rem;margin-top:1.4rem;font-size:0.9rem;}
+  .case-links a{color:var(--accent-2);}
+  .case-links a:hover{color:var(--accent);}
+  .case-links span{color:var(--text-faint);font-family:var(--font-mono);font-size:0.78rem;}
+  .case-figure{border:1px solid var(--line);border-radius:var(--radius);background:var(--bg-1);padding:1.3rem;position:sticky;top:5.5rem;}
+  .case-figure figcaption{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);margin-top:0.9rem;line-height:1.6;}
+  .diag text{font-family:var(--font-mono);font-size:10.5px;fill:var(--text);}
+  .diag text.dim{fill:var(--text-faint);font-size:9.5px;}
+  .diag text.hi{fill:var(--accent-2);}
+  .diag text.warn{fill:var(--accent);}
+  .diag .box{fill:var(--bg-2);stroke:var(--line-strong);stroke-width:1.2;}
+  .diag .box.hi{stroke:var(--accent-2);}
+  .diag .box.warn{stroke:var(--accent);stroke-dasharray:4 3;}
+  .diag .zone{fill:none;stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;}
+  .diag .arrow{stroke:var(--text-faint);stroke-width:1.3;fill:none;marker-end:url(#ah);}
+  .diag .arrow.hi{stroke:var(--accent-2);}
+  .diag .arrow.warn{stroke:var(--accent);}
+  .diag .bar{fill:var(--line-strong);}
+  .diag .bar.hi{fill:var(--accent-2);}
+  @media (max-width:900px){.case{grid-template-columns:1fr;}.case-figure{position:static;}}
+  @media (max-width:520px){.case-text dl{grid-template-columns:1fr;gap:0.2rem 0;}.case-text dd{margin-bottom:0.6rem;}}
+
+  /* EXPERIENCE (log) */
+  .log{border-top:1px solid var(--line);}
+  .log-entry{display:grid;grid-template-columns:165px 1fr;gap:2.4rem;padding:2.3rem 0;border-bottom:1px solid var(--line);}
+  .log-entry .when{font-family:var(--font-mono);font-size:0.8rem;color:var(--text-faint);padding-top:0.35rem;}
+  .log-entry .when .current{color:var(--accent-2);}
+  .log-role h3{font-size:1.3rem;margin:0 0 0.2rem;font-weight:700;}
+  .log-role .org{color:var(--text-dim);font-size:0.95rem;margin-bottom:1rem;}
+  .log-role ul{padding-left:1.1rem;color:var(--text-dim);}
+  .log-role li{margin-bottom:0.6rem;font-size:0.97rem;}
+  .log-role li::marker{color:var(--text-faint);}
+  .log-role li b{color:var(--text);font-weight:600;}
+  .log-role .recog{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-faint);margin-top:0.8rem;}
+  @media (max-width:700px){.log-entry{grid-template-columns:1fr;gap:0.6rem;}}
+
+  /* OTHER WORK */
+  .other-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+  .other{border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;background:var(--bg-1);display:flex;flex-direction:column;transition:transform .3s var(--ease),border-color .3s;}
+  .other:hover{transform:translateY(-3px);border-color:var(--line-strong);}
+  .other .tag{font-family:var(--font-mono);font-size:0.72rem;color:var(--accent-2);margin-bottom:0.7rem;}
+  .other h3{font-size:1.12rem;margin:0 0 0.5rem;font-weight:700;}
+  .other p{color:var(--text-dim);font-size:0.93rem;margin:0 0 1rem;flex-grow:1;}
+  .other p b{color:var(--text);font-weight:600;}
+  .other a{font-size:0.88rem;color:var(--accent-2);}
+  .other a:hover{color:var(--accent);}
+  .other .nolink{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);}
+  @media (max-width:900px){.other-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:600px){.other-grid{grid-template-columns:1fr;}}
+
+  /* SKILLS */
+  .spec-sheet{border-top:1px solid var(--line);margin:0;}
+  .spec-row{display:grid;grid-template-columns:210px 1fr;gap:2rem;padding:1.2rem 0;border-bottom:1px solid var(--line);}
+  .spec-row dt{font-family:var(--font-mono);font-size:0.8rem;color:var(--text-faint);}
+  .spec-row dd{margin:0;color:var(--text-dim);font-size:0.97rem;line-height:1.7;}
+  .certs{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-faint);margin-top:1.2rem;line-height:1.8;}
+  @media (max-width:700px){.spec-row{grid-template-columns:1fr;gap:0.3rem;}}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:3rem;align-items:start;}
+  .about-body p{color:var(--text-dim);font-size:1.05rem;max-width:58ch;margin:0 0 1.1rem;}
+  .about-body p:first-child{color:var(--text);font-size:1.14rem;}
+  .edu-card{border:1px solid var(--line);border-radius:var(--radius);padding:1.4rem 1.5rem;background:var(--bg-1);}
+  .edu-card + .edu-card{margin-top:0.9rem;}
+  .edu-card .school{font-weight:600;font-size:1rem;margin-bottom:0.2rem;}
+  .edu-card .degree{color:var(--text-dim);font-size:0.92rem;margin-bottom:0.7rem;}
+  .edu-card .meta{font-family:var(--font-mono);font-size:0.76rem;color:var(--text-faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.4rem;}
+  @media (max-width:860px){.about-grid{grid-template-columns:1fr;}}
+
+  /* PLAYGROUND: CAP */
+  .cap{display:grid;grid-template-columns:0.9fr 1.1fr;gap:2.4rem;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg-1);padding:2.2rem;}
+  @media (max-width:860px){.cap{grid-template-columns:1fr;}}
+  .cap-diagram svg{width:100%;height:auto;max-width:380px;margin-inline:auto;}
+  .cap-diagram .link{stroke:var(--line-strong);stroke-width:2;transition:stroke .3s;}
+  .cap-diagram .link.cut{stroke:var(--accent);stroke-dasharray:6 6;animation:cutflow 1s linear infinite;}
+  @keyframes cutflow{to{stroke-dashoffset:-12;}}
+  .cap-diagram .node{fill:var(--bg-2);stroke:var(--line-strong);stroke-width:1.5;transition:stroke .3s,fill .3s;}
+  .cap-diagram .node.hot{stroke:var(--accent-2);}
+  .cap-diagram .node.down{stroke:var(--accent);fill:rgba(234,96,144,0.08);}
+  .cap-diagram text{font-family:var(--font-mono);font-size:12px;fill:var(--text);}
+  .cap-diagram text.val{fill:var(--text-dim);font-size:11px;}
+  .cap-diagram text.val.stale{fill:var(--accent);}
+  .cap-legend{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-faint);text-align:center;margin-top:0.8rem;line-height:1.7;}
+  .cap-legend b{color:var(--text-dim);font-weight:500;}
+  .cap-round{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-faint);margin-bottom:0.8rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+  .cap-round .score{color:var(--accent-2);}
+  .cap h3{font-size:1.35rem;margin:0 0 0.6rem;font-weight:700;}
+  .cap .scenario{color:var(--text-dim);font-size:0.97rem;margin:0 0 1.3rem;min-height:3.2em;}
+  .cap-choices{display:flex;flex-direction:column;gap:0.65rem;margin-bottom:1rem;}
+  .cap-choice{text-align:left;font-family:var(--font-display);font-size:0.95rem;color:var(--text);background:transparent;border:1px solid var(--line-strong);border-radius:var(--radius-sm);padding:0.85rem 1.1rem;cursor:pointer;transition:all .2s;}
+  .cap-choice:hover:not(:disabled){border-color:var(--accent-2);background:var(--accent-2-soft);}
+  .cap-choice:disabled{cursor:default;opacity:.55;}
+  .cap-choice.right{border-color:var(--accent-2);background:var(--accent-2-soft);opacity:1;}
+  .cap-choice.wrong{border-color:var(--accent);opacity:1;}
+  .cap-choice .tag{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-faint);display:block;margin-bottom:0.2rem;}
+  .cap-choice.third{border-style:dashed;color:var(--text-dim);}
+  .cap-choice.third.shake{animation:shake .4s;}
+  @keyframes shake{20%{transform:translateX(-4px);}40%{transform:translateX(4px);}60%{transform:translateX(-3px);}80%{transform:translateX(3px);}}
+  .cap-feedback{border-left:2px solid var(--accent-2);padding:0.2rem 0 0.2rem 1rem;color:var(--text-dim);font-size:0.95rem;margin:0 0 1.2rem;display:none;}
+  .cap-feedback.show{display:block;}
+  .cap-feedback.miss{border-color:var(--accent);}
+  .cap-feedback b{color:var(--text);font-weight:600;}
+  .cap-actions{display:flex;gap:0.8rem;align-items:center;flex-wrap:wrap;}
+  .cap-actions .btn{padding:0.65rem 1.2rem;font-size:0.9rem;}
+  .cap-final{display:none;}
+  .cap-final.show{display:block;}
+  .cap-final p{color:var(--text-dim);}
+  .cap-final .verdict{font-size:1.6rem;color:var(--text);margin:0 0 0.6rem;font-weight:700;}
+  .cap-note{font-family:var(--font-mono);font-size:0.76rem;color:var(--text-faint);margin-top:1.2rem;max-width:70ch;line-height:1.7;}
+
+  /* CONTACT */
+  .contact-inner{display:grid;grid-template-columns:1.2fr 0.8fr;gap:3rem;align-items:start;}
+  .contact-inner h2{font-size:clamp(1.9rem,4.4vw,3rem);max-width:14ch;margin:0 0 1.6rem;line-height:1.12;font-weight:700;}
+  .contact-links{display:flex;flex-direction:column;gap:0.85rem;}
+  .contact-links a{font-size:1.05rem;border-bottom:1px solid var(--line-strong);padding-bottom:0.3rem;transition:.25s;width:fit-content;}
+  .contact-links a:hover{color:var(--accent-2);border-color:var(--accent-2);}
+  .resume-box{border:1px solid var(--line);border-radius:var(--radius);padding:1.7rem;background:var(--bg-1);}
+  .resume-box p{color:var(--text-dim);font-size:0.95rem;margin:0 0 1.2rem;}
+  .resume-box .meta{font-family:var(--font-mono);font-size:0.76rem;color:var(--text-faint);margin-top:1rem;line-height:1.7;}
+  @media (max-width:860px){.contact-inner{grid-template-columns:1fr;}}
+
+  .footer{padding:2rem var(--gutter);border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-faint);}
+  .footer .src{color:var(--text-dim);max-width:64ch;}
+  .footer .src a{color:var(--accent-2);}
+  .footer .src a:hover{border-bottom:1px solid var(--accent-2);}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+    .js .reveal{opacity:1;transform:none;}
+    .js .hero h1 .line span{transform:none;animation:none;}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<nav class="nav" id="nav" aria-label="Primary">
+  <a href="#top" class="nav-mark">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><line x1="9" y1="11" x2="16" y2="22" stroke="var(--line-strong)" stroke-width="1.4"/><line x1="23" y1="11" x2="16" y2="22" stroke="var(--line-strong)" stroke-width="1.4"/><line x1="9" y1="11" x2="23" y2="11" stroke="var(--line-strong)" stroke-width="1.4"/><circle cx="9" cy="11" r="2.3" fill="var(--accent-2)"/><circle cx="23" cy="11" r="2.3" fill="var(--accent-2)"/><circle cx="16" cy="22" r="2.6" fill="var(--accent)"/></svg>
+    Shreyash Bhatkar
+  </a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#playground">Playground</a></li>
+    <li><a href="#contact">Résumé &amp; contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-social">
+      <a href="https://github.com/Shr3yash" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.73.5.5 5.73.5 12a11.5 11.5 0 008 10.96c.58.1.79-.25.79-.56v-2.17c-3.26.71-3.95-1.4-3.95-1.4-.53-1.35-1.3-1.71-1.3-1.71-1.07-.73.08-.72.08-.72 1.18.08 1.8 1.21 1.8 1.21 1.05 1.8 2.75 1.28 3.42.98.1-.76.41-1.28.75-1.58-2.6-.3-5.34-1.3-5.34-5.78 0-1.28.46-2.32 1.2-3.14-.12-.3-.52-1.52.12-3.16 0 0 .98-.31 3.2 1.2a11.1 11.1 0 015.83 0c2.22-1.51 3.2-1.2 3.2-1.2.64 1.64.24 2.86.12 3.16.75.82 1.2 1.86 1.2 3.14 0 4.49-2.75 5.47-5.36 5.76.42.37.8 1.09.8 2.2v3.26c0 .31.2.67.8.56A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg></a>
+      <a href="https://www.linkedin.com/in/shr3yash/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.15 1.45-2.15 2.95v5.66H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-nav" id="mobileNav" hidden>
+  <a href="#work">Work</a>
+  <a href="#experience">Experience</a>
+  <a href="#skills">Skills</a>
+  <a href="#about">About</a>
+  <a href="#playground">Playground</a>
+  <a href="#contact">Résumé &amp; contact</a>
+  <div class="nav-social">
+    <a href="https://github.com/Shr3yash" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/shr3yash/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</div>
+
+<main id="main">
+  <section class="hero" id="top">
+    <canvas id="topology" aria-hidden="true"></canvas>
+    <div class="hero-scrim"></div>
+    <div class="hero-inner">
+      <p class="status-line"><span class="pulse" aria-hidden="true"></span> Graduate Researcher, SSAIL at UIUC. Open to 2027 software engineering roles.</p>
+      <h1>
+        <span class="line"><span style="animation-delay:.05s">Making distributed</span></span>
+        <span class="line"><span style="animation-delay:.15s">systems agree with</span></span>
+        <span class="line"><span style="animation-delay:.25s">each other.</span></span>
+      </h1>
+      <p class="lede">Software engineer working on <b>distributed AI systems and ML infrastructure</b>: multi-GPU training and inference at UIUC's Supercomputing Systems &amp; AI Lab. Previously built production backend systems at Oracle handling 10M+ transactions a day.</p>
+      <div class="cta-row">
+        <a href="#work" class="btn btn-primary">View selected work</a>
+        <a href="assets/Shreyash_Bhatkar_Resume.pdf" class="btn btn-ghost" download="Shreyash_Bhatkar_Resume.pdf">Résumé (PDF)</a>
+        <span class="quiet"><a href="https://github.com/Shr3yash" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/shr3yash/" target="_blank" rel="noopener">LinkedIn</a></span>
+      </div>
+    </div>
+    <div class="proof">
+      <div class="proof-inner">
+        <div><b>10M+</b><span>transactions/day, Oracle billing services</span></div>
+        <div><b>+37% / −12%</b><span>gRPC throughput / P95 latency after tuning</span></div>
+        <div><b>2.3×</b><span>fewer decode steps, adaptive inference runtime</span></div>
+        <div><b>4× Blackwell</b><span>RTX PRO 6000 GPUs, FSDP2 + vLLM stack</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Selected work</h2>
+        <p>Three pieces, each with the part that was actually hard. Diagrams are drawn from the real systems, not stock art.</p>
+      </div>
+
+      <article class="case reveal">
+        <div class="case-text">
+          <h3>Distributed RL infrastructure across an HPC cluster and the cloud</h3>
+          <div class="where">SSAIL, UIUC · Jan 2026 – present · advisor Prof. Minjia Zhang</div>
+          <dl>
+            <dt>Problem</dt>
+            <dd>Run and benchmark agentic RL (TRL AsyncGRPO, TorchForge) on official SWE-Bench Verified tasks, with training on NCSA DeltaAI and the Dockerized evaluation environments on AWS EC2. Two clusters, two schedulers, one experiment.</dd>
+            <dt>Hard part</dt>
+            <dd>An early result showed one framework clearly outrunning the other. <b>It was an artifact:</b> the two runs had been given asymmetric GPU placement. Left uncaught, that number would have steered the project.</dd>
+            <dt>What I did</dt>
+            <dd>Profiled both frameworks on step latency, memory, utilization, and placement traces; normalized placement and re-ran matched experiments. Deployed Qwen3.5-4B with FSDP2 (2-GPU BF16 training) and vLLM on <b>4× RTX PRO 6000 Blackwell</b>, then traced an NCCL policy-weight sync hang at the first update to the source, ruling out inference DP and the 1 GB packed-transfer limit with controlled A/B topology tests.</dd>
+            <dt>Result</dt>
+            <dd>A corrected comparison, a reproducible pinned stack (PyTorch/CUDA/vLLM/TRL with state moved off ephemeral NVMe), and a working DeltaAI→EC2 execution path for SWE-Bench workloads.</dd>
+          </dl>
+          <div class="case-links">
+            <a href="https://github.com/Shr3yash/torchforge-superrl-bench" target="_blank" rel="noopener">Benchmark scripts on GitHub</a>
+            <span>lab infrastructure is otherwise private</span>
+          </div>
+        </div>
+        <figure class="case-figure">
+          <svg class="diag" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Architecture: trainer on NCSA DeltaAI syncs policy weights over NCCL to vLLM inference workers; rollouts execute in Docker sandboxes on AWS EC2 and return rewards.">
+            <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--text-faint)"/></marker></defs>
+            <rect class="zone" x="10" y="12" width="300" height="200" rx="10"/>
+            <text class="dim" x="22" y="30">NCSA DeltaAI · Slurm</text>
+            <rect class="box hi" x="30" y="50" width="120" height="58" rx="6"/>
+            <text x="90" y="72" text-anchor="middle">trainer</text>
+            <text class="dim" x="90" y="88" text-anchor="middle">FSDP2 · BF16 · 2 GPU</text>
+            <text class="dim" x="90" y="100" text-anchor="middle">TRL AsyncGRPO</text>
+            <rect class="box" x="190" y="50" width="100" height="26" rx="5"/><text x="240" y="67" text-anchor="middle">vLLM w0</text>
+            <rect class="box" x="190" y="82" width="100" height="26" rx="5"/><text x="240" y="99" text-anchor="middle">vLLM w1</text>
+            <rect class="box warn" x="190" y="114" width="100" height="26" rx="5"/><text class="warn" x="240" y="131" text-anchor="middle">vLLM w2 · stall</text>
+            <rect class="box" x="190" y="146" width="100" height="26" rx="5"/><text x="240" y="163" text-anchor="middle">vLLM w3</text>
+            <path class="arrow hi" d="M150 79 H188"/>
+            <text class="hi" x="168" y="45" text-anchor="middle">NCCL</text>
+            <text class="dim" x="168" y="188" text-anchor="middle">policy weights</text>
+            <text class="dim" x="160" y="200" text-anchor="middle">4× RTX PRO 6000 Blackwell</text>
+            <rect class="zone" x="330" y="12" width="180" height="200" rx="10"/>
+            <text class="dim" x="342" y="30">AWS EC2 · persistent EBS</text>
+            <rect class="box" x="350" y="50" width="140" height="120" rx="6"/>
+            <text x="420" y="74" text-anchor="middle">Docker sandboxes</text>
+            <text class="dim" x="420" y="92" text-anchor="middle">SWE-Bench Verified</text>
+            <text class="dim" x="420" y="106" text-anchor="middle">patch · test · resolve</text>
+            <text class="dim" x="420" y="150" text-anchor="middle">reward + trajectory</text>
+            <path class="arrow" d="M290 96 H348"/>
+            <text class="dim" x="318" y="90" text-anchor="middle">rollouts</text>
+            <path class="arrow" d="M350 160 H320 V250 H90 V112"/>
+            <text class="dim" x="220" y="244" text-anchor="middle">rewards back to trainer</text>
+            <text class="dim" x="20" y="286">profiled: step latency · GPU mem/util · rollout time · sync time · placement</text>
+          </svg>
+          <figcaption>The dashed worker is where the first-update sync hang reproduced. The placement artifact came from comparing runs that did not share this topology.</figcaption>
+        </figure>
+      </article>
+
+      <article class="case reveal">
+        <div class="case-text">
+          <h3>Adaptive LLM inference runtime</h3>
+          <div class="where">independent project · Python, PyTorch, vLLM, CUDA · Llama models, ShareGPT prompts</div>
+          <dl>
+            <dt>Problem</dt>
+            <dd>Autoregressive decoding pays a full forward pass per token even when the model is nearly certain about the next several. Speculative approaches help, but unsafe multi-token transitions degrade output quality.</dd>
+            <dt>Hard part</dt>
+            <dd>Deciding <b>when</b> a multi-token step is safe. Single confidence signals were unreliable; the runtime combines entropy, margin, energy, and agreement signals, and profiles verification and KV-cache behavior to characterize the transitions that go wrong.</dd>
+            <dt>What I did</dt>
+            <dd>Built a decoding runtime that routes between single- and multi-token generation per step, plus the profiling to find where it broke. Batched inference and LLM-as-judge evaluation across 5,000 generations.</dd>
+            <dt>Result</dt>
+            <dd><b>2.3× fewer decoding steps</b> and <b>28% lower long-form latency</b> against the single-token baseline. Evaluation time went from <b>90 s to 3.3 s per sample</b> (27×) by batching, which is what made the 5,000-sample sweep feasible at all.</dd>
+          </dl>
+          <div class="case-links">
+            <a href="https://github.com/Shr3yash/Modality-Aware-KV-Tiering-for-Multimodal-RAG" target="_blank" rel="noopener">Related: KV-cache tiering for multimodal RAG serving (GitHub)</a>
+            <span>runtime code not yet public</span>
+          </div>
+        </div>
+        <figure class="case-figure">
+          <svg class="diag" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow: confidence signals gate single-token versus multi-token decoding; bar chart of relative decode steps, long-form latency, and evaluation time per sample.">
+            <rect class="box" x="14" y="24" width="96" height="40" rx="6"/><text x="62" y="42" text-anchor="middle">hidden state</text><text class="dim" x="62" y="56" text-anchor="middle">step t</text>
+            <path class="arrow" d="M110 44 H148"/>
+            <rect class="box hi" x="150" y="14" width="120" height="60" rx="6"/>
+            <text x="210" y="34" text-anchor="middle">confidence gate</text>
+            <text class="dim" x="210" y="49" text-anchor="middle">entropy · margin</text>
+            <text class="dim" x="210" y="62" text-anchor="middle">energy · agreement</text>
+            <path class="arrow" d="M270 30 H318"/><path class="arrow" d="M270 58 H318"/>
+            <rect class="box" x="320" y="10" width="90" height="30" rx="5"/><text x="365" y="29" text-anchor="middle">1 token</text>
+            <rect class="box hi" x="320" y="50" width="90" height="30" rx="5"/><text class="hi" x="365" y="69" text-anchor="middle">k tokens</text>
+            <path class="arrow" d="M410 65 H448"/>
+            <rect class="box" x="450" y="50" width="60" height="30" rx="5"/><text x="480" y="69" text-anchor="middle">verify</text>
+            <text class="dim" x="480" y="96" text-anchor="middle">reject → 1 token</text>
+            <text class="dim" x="14" y="128">relative to single-token baseline (lower is better)</text>
+            <text x="14" y="152">decode steps</text>
+            <rect class="bar" x="130" y="142" width="300" height="12"/><rect class="bar hi" x="130" y="142" width="130" height="12"/>
+            <text class="hi" x="268" y="152">0.43× (2.3× fewer)</text>
+            <text x="14" y="182">long-form latency</text>
+            <rect class="bar" x="130" y="172" width="300" height="12"/><rect class="bar hi" x="130" y="172" width="216" height="12"/>
+            <text class="hi" x="354" y="182">0.72× (−28%)</text>
+            <text x="14" y="212">eval time / sample</text>
+            <rect class="bar" x="130" y="202" width="300" height="12"/><rect class="bar hi" x="130" y="202" width="11" height="12"/>
+            <text class="hi" x="150" y="212">3.3 s vs 90 s (27×, batched)</text>
+            <text class="dim" x="14" y="250">5,000 ShareGPT generations · LLM-as-judge quality held against baseline</text>
+            <text class="dim" x="14" y="268">unsafe transitions found by profiling verification + KV-cache behavior</text>
+          </svg>
+          <figcaption>Bars are the measured ratios from the project; the flow is the actual routing decision made once per step.</figcaption>
+        </figure>
+      </article>
+
+      <article class="case reveal">
+        <div class="case-text">
+          <h3>Production billing and subscription services at telecom scale</h3>
+          <div class="where">Oracle · Batelco Telecom, PPC Retail India · Jul 2023 – Jan 2026</div>
+          <dl>
+            <dt>Problem</dt>
+            <dd>Subscription, billing, and account workflows for a telecom operator: <b>10M+ transactions a day</b> across 8 Java/Kotlin Spring Boot services, 20+ REST APIs, and Kafka fan-out to 12+ downstream integrations. The failure that matters is charging someone twice.</dd>
+            <dt>Hard part</dt>
+            <dd>Throughput collapsed under load and nobody could say why. Prometheus traces showed <b>gRPC HTTP/2 stream exhaustion</b> and connection-pool saturation on the path to the 5G core, not the application code everyone was staring at.</dd>
+            <dt>What I did</dt>
+            <dd>Tuned Istio/OCNE connection pools and service configuration; designed saga recovery plus Redis idempotency keys so retries are safe by construction; built retry-and-dedupe Kafka pipelines; reworked SQL/JPA access paths over 300M+ monthly records. Also led a 4-person team shipping a production RAG assistant (LangChain, Cohere, Neo4j) for 500+ engineers.</dd>
+            <dt>Result</dt>
+            <dd><b>+37% throughput and −12% P95 latency</b> on the gRPC path; <b>99.95%</b> of transactions completing correctly under concurrent load; <b>+35%</b> Kafka delivery throughput with <b>zero duplicate-charge incidents</b> after rollout; <b>−20%</b> peak-cycle database latency. The assistant cut hallucinations 41% and ticket-resolution time 33%.</dd>
+          </dl>
+          <div class="case-links"><span>client systems; no public code. Recognition: Above and Beyond Award, Pat on the Back Award.</span></div>
+        </div>
+        <figure class="case-figure">
+          <svg class="diag" viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Architecture: clients through an API layer to Spring Boot microservices with Redis idempotency and saga compensation; gRPC to the 5G core; Kafka fan-out with retry and dedupe to downstream integrations.">
+            <rect class="box" x="14" y="120" width="70" height="40" rx="6"/><text x="49" y="144" text-anchor="middle">clients</text>
+            <path class="arrow" d="M84 140 H118"/>
+            <rect class="box" x="120" y="30" width="150" height="220" rx="8"/>
+            <text x="195" y="50" text-anchor="middle">8 Spring Boot services</text>
+            <text class="dim" x="195" y="64" text-anchor="middle">20+ REST APIs · Java/Kotlin</text>
+            <rect class="box hi" x="134" y="82" width="122" height="34" rx="5"/>
+            <text class="hi" x="195" y="97" text-anchor="middle">Redis idempotency</text>
+            <text class="dim" x="195" y="110" text-anchor="middle">key per charge</text>
+            <rect class="box hi" x="134" y="126" width="122" height="34" rx="5"/>
+            <text class="hi" x="195" y="141" text-anchor="middle">saga recovery</text>
+            <text class="dim" x="195" y="154" text-anchor="middle">compensate partial writes</text>
+            <rect class="box" x="134" y="170" width="122" height="30" rx="5"/>
+            <text x="195" y="189" text-anchor="middle">SQL / JPA</text>
+            <text class="dim" x="195" y="216" text-anchor="middle">300M+ rows/month</text>
+            <text class="dim" x="195" y="230" text-anchor="middle">−20% peak latency</text>
+            <path class="arrow warn" d="M270 70 H338"/>
+            <text class="warn" x="304" y="62" text-anchor="middle">gRPC · HTTP/2</text>
+            <rect class="box warn" x="340" y="46" width="160" height="48" rx="6"/>
+            <text x="420" y="66" text-anchor="middle">5G core · Wi-Fi control</text>
+            <text class="dim" x="420" y="82" text-anchor="middle">stream exhaustion found here</text>
+            <text class="hi" x="420" y="112" text-anchor="middle">pools tuned: +37% / −12% P95</text>
+            <path class="arrow" d="M270 170 H338"/>
+            <rect class="box" x="340" y="150" width="80" height="40" rx="6"/>
+            <text x="380" y="170" text-anchor="middle">Kafka</text><text class="dim" x="380" y="183" text-anchor="middle">retry · dedupe</text>
+            <path class="arrow" d="M420 170 H448"/>
+            <rect class="box" x="450" y="130" width="56" height="80" rx="6"/>
+            <text x="478" y="160" text-anchor="middle">12+</text><text class="dim" x="478" y="174" text-anchor="middle">downstream</text><text class="dim" x="478" y="186" text-anchor="middle">systems</text>
+            <text class="hi" x="380" y="216" text-anchor="middle">+35% delivery, 0 duplicate charges</text>
+            <text class="dim" x="14" y="270">observed with Prometheus + OpenTelemetry; 10M+ transactions/day sustained</text>
+          </svg>
+          <figcaption>The two highlighted boxes are why retries are safe. The dashed edge is where the throughput problem actually lived.</figcaption>
+        </figure>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="experience">
+    <div class="wrap">
+      <div class="section-head reveal"><h2>Experience</h2></div>
+      <div class="log reveal">
+        <div class="log-entry">
+          <div class="when">Jan 2026 —<br><span class="current">present</span></div>
+          <div class="log-role">
+            <h3>Graduate Researcher, Systems &amp; Runtime Engineering</h3>
+            <div class="org">SSAIL, Supercomputing Systems &amp; AI Lab, UIUC · advisor Prof. Minjia Zhang</div>
+            <ul>
+              <li>Built an NCSA DeltaAI-to-AWS execution path for Dockerized SWE-Bench workloads, validating reproducible orchestration across HPC and cloud.</li>
+              <li>Profiled TRL/TorchForge across latency, memory, utilization, and placement; found asymmetric GPU allocation behind an apparent speedup and redesigned matched experiments.</li>
+              <li>Debugged FSDP2/vLLM/NCCL synchronization failures on <b>4×</b> RTX PRO 6000 GPUs using source tracing, controlled A/B tests, and process-level telemetry.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="when">Jun 2026 —<br><span class="current">present</span></div>
+          <div class="log-role">
+            <h3>Graduate Research Assistant, Human-Robot Systems</h3>
+            <div class="org">University of Illinois Urbana-Champaign</div>
+            <ul>
+              <li>Operate a 6-DOF manipulator and built RGB-D/3D data pipelines with <b>&lt;50 ms</b> event latency; calibrated camera-to-robot mappings with SE(3) transforms.</li>
+              <li>Built Grasshopper components that turn parametric 3D geometry into machine-readable control data for robot sequencing and fabrication workflows.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="when">Jul 2023 —<br>Jan 2026</div>
+          <div class="log-role">
+            <h3>Software Engineer</h3>
+            <div class="org">Oracle · client engagements: Batelco Telecom, PPC Retail India</div>
+            <ul>
+              <li>Built <b>8</b> Java/Kotlin Spring Boot microservices and <b>20+</b> REST APIs handling <b>10M+</b> daily transactions; saga recovery and Redis idempotency held <b>99.95%</b> correctness under concurrent load.</li>
+              <li>Traced gRPC HTTP/2 stream exhaustion with Prometheus and tuned Istio/OCNE connection pools: <b>+37%</b> throughput, <b>−12%</b> P95 latency. Kafka pipelines with idempotent retry across <b>12+</b> integrations: <b>+35%</b> throughput, zero duplicate charges.</li>
+              <li>Led a <b>4</b>-person team building a production RAG assistant for <b>500+</b> engineers and <b>2K+</b> daily queries, cutting hallucinations <b>41%</b> and ticket-resolution time <b>33%</b>.</li>
+            </ul>
+            <div class="recog">recognition: Above and Beyond Award · Pat on the Back Award</div>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="when">Dec 2022 —<br>May 2023</div>
+          <div class="log-role">
+            <h3>AI Research Intern, Financial Markets</h3>
+            <div class="org">Nibha Tech Solutions, Nashik, India</div>
+            <ul>
+              <li>C++/Python feature pipelines over 25 years of market data, producing <b>30,000+</b> research features; integrated <b>15 GB+</b> datasets into backend/ML pipelines and evaluated SARIMA/SHAP models at <b>96.2%</b> normal-market classification accuracy.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="other">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Other work</h2>
+        <p>Smaller, but each one taught me something the big projects didn't.</p>
+      </div>
+      <div class="other-grid reveal">
+        <div class="other">
+          <div class="tag">Distributed storage · C++</div>
+          <h3>ScDFS, a scalable distributed file system</h3>
+          <p>Chunk-based storage with consistent hashing, Cassandra-backed metadata, <b>3× replication</b>, and node recovery; multithreaded sharding cut query latency <b>40%</b> while keeping replicas consistent under contention.</p>
+          <a href="https://github.com/Shr3yash/ScDFS" target="_blank" rel="noopener">Code on GitHub</a>
+        </div>
+        <div class="other">
+          <div class="tag">Real-time collaboration · TypeScript</div>
+          <h3>SynCode, a synchronized code editor</h3>
+          <p>Operational-transform sync over WebSockets at <b>&lt;100 ms</b>, WebRTC audio/video, Redis-backed horizontal scaling; load-tested at <b>300+</b> concurrent users with Jest integration tests on AWS.</p>
+          <a href="https://github.com/Shr3yash/SynCode" target="_blank" rel="noopener">Code on GitHub</a>
+        </div>
+        <div class="other">
+          <div class="tag">Inference serving · Python</div>
+          <h3>Modality-aware KV-cache tiering</h3>
+          <p>A from-scratch serving layer for vision-language RAG that reuses KV cache across GPU, CPU, and SSD tiers to raise queries per second and fit larger batches on the same GPU.</p>
+          <a href="https://github.com/Shr3yash/Modality-Aware-KV-Tiering-for-Multimodal-RAG" target="_blank" rel="noopener">Code on GitHub</a>
+        </div>
+        <div class="other">
+          <div class="tag">Embedded · on-device RL</div>
+          <h3>Self-powered safety wearable (OPEHS)</h3>
+          <p>Piezo-triboelectric harvesting at <b>10–50 mW</b> per stride feeding an ARM Cortex-M0 + BLE board; on-device DQN/PPO classifies routine vs. high-risk movement at <b>93% F1</b> on 40k+ footfall samples. Indian provisional patent filed, March 2025.</p>
+          <a href="https://github.com/Shr3yash/OPEHS" target="_blank" rel="noopener">Code on GitHub</a>
+        </div>
+        <div class="other">
+          <div class="tag">Operating systems · C, Assembly</div>
+          <h3>xv6 kernel extensions</h3>
+          <p>Extensions to the MIT xv6 teaching kernel, done to understand the scheduler, syscalls, and memory paths from the inside instead of from a textbook.</p>
+          <a href="https://github.com/Shr3yash/xv6-extension-os" target="_blank" rel="noopener">Code on GitHub</a>
+        </div>
+        <div class="other">
+          <div class="tag">Computer vision · published</div>
+          <h3>Forest-fire detection with a custom RCNN</h3>
+          <p>PyTorch RCNN over 10k+ augmented images at <b>97.3% mAP</b>, with a Kafka + Flink pipeline for real-time anomaly flags. Published at ICEPTP '22, Lisbon.</p>
+          <a href="https://www.researchgate.net/publication/367713706_Forest_Fire_Detection_and_Prediction_from_image_processing_using_RCNN" target="_blank" rel="noopener">Paper on ResearchGate</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="skills">
+    <div class="wrap">
+      <div class="section-head reveal"><h2>Skills</h2></div>
+      <dl class="spec-sheet reveal">
+        <div class="spec-row"><dt>Languages</dt><dd>C++, Python, Java, Go, Rust, TypeScript/JavaScript, SQL, Bash</dd></div>
+        <div class="spec-row"><dt>Distributed &amp; ML systems</dt><dd>PyTorch, FSDP2, vLLM, CUDA, NCCL, TRL/GRPO, GPU profiling, LLM inference and KV-cache work, Slurm/HPC, Linux, concurrency</dd></div>
+        <div class="spec-row"><dt>Backend</dt><dd>Spring Boot, gRPC, REST, microservices, Kafka, Redis, PostgreSQL, Cassandra, JPA, Node.js, React</dd></div>
+        <div class="spec-row"><dt>Infrastructure</dt><dd>AWS, Docker, Kubernetes, Istio, CI/CD (Jenkins), Prometheus, OpenTelemetry, MLflow, Git</dd></div>
+        <div class="spec-row"><dt>Embedded &amp; robotics</dt><dd>Embedded C, ARM Cortex-M0, BLE, Arduino, RGB-D/3D pipelines, SE(3) calibration, 6-DOF manipulator operation</dd></div>
+      </dl>
+      <div class="certs reveal">certifications: Oracle Certified Generative AI Professional · Oracle Certified Data Science Professional · runner-up, CGIU Memorial AI Hackathon</div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="about-grid reveal">
+        <div class="about-body">
+          <p>The work I gravitate toward is the part that resists autocomplete: a hang that only appears on the first policy update, a benchmark that lies because of where the GPUs were placed, a duplicate charge that only happens under a partition. Those get found by someone who reads the stack all the way down.</p>
+          <p>I spent two and a half years at Oracle shipping backend systems that telecom and retail clients depended on, then came to UIUC to work on the layer underneath machine learning. Earlier I built hardware, which is why I'm also working on RGB-D pipelines for a 6-DOF manipulator here: I'd like to take distributed-systems and ML-infrastructure work into robotics and embodied systems over time.</p>
+        </div>
+        <div>
+          <div class="edu-card">
+            <div class="school">University of Illinois Urbana-Champaign</div>
+            <div class="degree">Master of Computer Science, GPA 4.0/4.0</div>
+            <div class="meta"><span>Champaign, IL</span><span>Expected 2027</span></div>
+          </div>
+          <div class="edu-card">
+            <div class="school">University of Pune</div>
+            <div class="degree">B.Tech, Electronics and Computer Science, CGPA 3.62/4.0</div>
+            <div class="meta"><span>Pune, India</span><span>Aug 2019 – May 2023</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="playground">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Systems playground: a partition just happened. Pick two.</h2>
+        <p>Under a network split, a system gives up either consistency or availability, and the network always splits eventually. The interesting part is knowing which to give up for a given workload. Seven rounds, drawn from systems I've built or debugged.</p>
+      </div>
+      <div class="cap reveal">
+        <div class="cap-diagram" aria-hidden="true">
+          <svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg">
+            <line class="link" x1="95" y1="90" x2="285" y2="90"/>
+            <line class="link cutA" x1="95" y1="90" x2="190" y2="235"/>
+            <line class="link cutB" x1="285" y1="90" x2="190" y2="235"/>
+            <rect class="node hot" id="capA" x="50" y="60" width="90" height="60" rx="8"/>
+            <text x="95" y="83" text-anchor="middle">node A</text>
+            <text class="val" id="capAv" x="95" y="105" text-anchor="middle">v=12</text>
+            <rect class="node hot" id="capB" x="240" y="60" width="90" height="60" rx="8"/>
+            <text x="285" y="83" text-anchor="middle">node B</text>
+            <text class="val" id="capBv" x="285" y="105" text-anchor="middle">v=12</text>
+            <rect class="node" id="capC" x="145" y="205" width="90" height="60" rx="8"/>
+            <text x="190" y="228" text-anchor="middle">node C</text>
+            <text class="val" id="capCv" x="190" y="250" text-anchor="middle">v=12</text>
+            <text id="capCaption" class="val" x="190" y="288" text-anchor="middle">partition: C cut off from A and B</text>
+          </svg>
+          <div class="cap-legend"><b>C</b> every read sees the latest write &nbsp; <b>A</b> every request gets a non-error answer<br><b>P</b> it keeps working when the network splits</div>
+        </div>
+        <div class="cap-panel">
+          <div id="capPlay">
+            <div class="cap-round"><span id="capRound">Round 1 of 7</span><span class="score" id="capScore"></span></div>
+            <h3 id="capTitle"></h3>
+            <p class="scenario" id="capScenario"></p>
+            <div class="cap-choices">
+              <button class="cap-choice" id="capAP"><span class="tag">favor availability</span>Keep accepting writes on both sides; reconcile when the partition heals.</button>
+              <button class="cap-choice" id="capCP"><span class="tag">favor consistency</span>Refuse writes on the minority side until it can reach a quorum.</button>
+              <button class="cap-choice third" id="capAll"><span class="tag">favor everything</span>Keep all three.</button>
+            </div>
+            <div class="cap-feedback" id="capFeedback" aria-live="polite"></div>
+            <div class="cap-actions"><button class="btn btn-ghost" id="capNext" style="display:none">Next round</button></div>
+          </div>
+          <div class="cap-final" id="capFinal" aria-live="polite">
+            <p class="verdict" id="capVerdict"></p>
+            <p id="capSummary"></p>
+            <p>If you disagreed with a call, I'd like to hear why. That argument is most of what distributed-systems work actually is.</p>
+            <div class="cap-actions">
+              <button class="btn btn-ghost" id="capRestart">Play again</button>
+              <a class="btn btn-primary" href="mailto:bhatkar3@illinois.edu?subject=About%20the%20partition%20game">Argue with me</a>
+            </div>
+          </div>
+          <p class="cap-note">These are simplified partition trade-offs for the sake of a game, not claims that every real system reduces to textbook CAP. Round 6 in particular is a version-consistency call dressed as CAP; the feedback says so.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="wrap">
+      <div class="contact-inner reveal">
+        <div>
+          <h2>Let's talk about a role, a project, or a system that's misbehaving.</h2>
+          <div class="contact-links">
+            <a href="mailto:bhatkar3@illinois.edu">bhatkar3@illinois.edu</a>
+            <a href="https://www.linkedin.com/in/shr3yash/" target="_blank" rel="noopener">linkedin.com/in/shr3yash</a>
+            <a href="https://github.com/Shr3yash" target="_blank" rel="noopener">github.com/Shr3yash</a>
+          </div>
+        </div>
+        <div class="resume-box">
+          <p>Looking for software engineering roles starting 2027 in distributed systems, ML infrastructure, or robotics software. Champaign, IL.</p>
+          <a class="btn btn-primary" href="assets/Shreyash_Bhatkar_Resume.pdf" download="Shreyash_Bhatkar_Resume.pdf">Download résumé (PDF)</a>
+          <div class="meta">one page · updated September 2026 · expected graduation 2027</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span class="src">One HTML file: no framework, bundler, analytics, or JavaScript dependencies. Two fonts and a PDF are the only external requests. <a href="https://github.com/Shr3yash/shr3yash.github.io" target="_blank" rel="noopener">Read the source</a>; it was written to be read.</span>
+  <span>© 2026 Shreyash Bhatkar</span>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* Mobile nav: hidden attribute, Escape to close, focus restored */
+  var navToggle = $('navToggle'), mobileNav = $('mobileNav');
+  function setMenu(open){
+    if (!navToggle || !mobileNav) return;
+    mobileNav.hidden = !open;
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    if (open){ var first = mobileNav.querySelector('a'); if (first) first.focus(); }
+    else navToggle.focus();
+  }
+  if (navToggle && mobileNav){
+    navToggle.addEventListener('click', function(){ setMenu(mobileNav.hidden); });
+    mobileNav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ setMenu(false); }); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !mobileNav.hidden) setMenu(false); });
+  }
+
+  /* Nav scroll state */
+  var nav = $('nav');
+  function onScroll(){ if (nav) nav.classList.toggle('scrolled', window.scrollY > 40); }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* Section reveal + active nav link */
+  if ('IntersectionObserver' in window){
+    var revealIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in-view'); revealIO.unobserve(e.target); } });
+    }, {threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(function(el){ revealIO.observe(el); });
+    var navLinks = document.querySelectorAll('.nav-links a');
+    var navIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          navLinks.forEach(function(l){ l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id); });
+        }
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    document.querySelectorAll('main section[id]').forEach(function(s){ navIO.observe(s); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* Hero topology canvas */
+  var canvas = $('topology');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (canvas && canvas.getContext){
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var nodes = [], pulses = [], NODE_COUNT = 46, mouse = {x:-9999, y:-9999}, pulseTimer = 0, running = true;
+    function size(){ var r = canvas.getBoundingClientRect(); return {w:r.width, h:r.height}; }
+    function resize(){
+      var s = size();
+      canvas.width = Math.max(1, Math.floor(s.w * dpr)); canvas.height = Math.max(1, Math.floor(s.h * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function initNodes(){
+      var s = size(); nodes = [];
+      for (var i = 0; i < NODE_COUNT; i++){
+        nodes.push({ x: Math.random()*s.w, y: Math.random()*s.h, vx:(Math.random()-0.5)*0.16, vy:(Math.random()-0.5)*0.16, r: Math.random()*1.6+1.7 });
+      }
+    }
+    resize(); initNodes();
+    window.addEventListener('resize', resize, {passive:true});
+    canvas.addEventListener('mousemove', function(e){ var r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+    canvas.addEventListener('mouseleave', function(){ mouse.x = -9999; mouse.y = -9999; });
+    function spawnPulse(){
+      var a = nodes[Math.floor(Math.random()*nodes.length)], b = nodes[Math.floor(Math.random()*nodes.length)];
+      if (a !== b && Math.hypot(a.x-b.x, a.y-b.y) < 210) pulses.push({a:a, b:b, t:0});
+    }
+    function draw(){
+      var s = size(); ctx.clearRect(0, 0, s.w, s.h);
+      nodes.forEach(function(n){ n.x += n.vx; n.y += n.vy; if (n.x < 0 || n.x > s.w) n.vx *= -1; if (n.y < 0 || n.y > s.h) n.vy *= -1; });
+      for (var i = 0; i < nodes.length; i++) for (var j = i+1; j < nodes.length; j++){
+        var a = nodes[i], b = nodes[j], d = Math.hypot(a.x-b.x, a.y-b.y);
+        if (d < 170){ ctx.strokeStyle = 'rgba(87,214,198,' + ((1-d/170)*0.42) + ')'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+      }
+      nodes.forEach(function(n){
+        var d = Math.hypot(n.x-mouse.x, n.y-mouse.y), glow = d < 160;
+        if (glow){ var k = 1 - d/160; ctx.beginPath(); ctx.arc(n.x, n.y, n.r*(2.6+3*k), 0, Math.PI*2); ctx.fillStyle = 'rgba(234,96,144,' + (0.10+0.14*k) + ')'; ctx.fill(); }
+        ctx.beginPath(); ctx.arc(n.x, n.y, glow ? n.r*1.9 : n.r, 0, Math.PI*2);
+        ctx.fillStyle = glow ? 'rgba(234,96,144,0.95)' : 'rgba(170,180,200,0.72)'; ctx.fill();
+      });
+      pulses = pulses.filter(function(p){ return p.t < 1; });
+      pulses.forEach(function(p){ p.t += 0.02; ctx.beginPath(); ctx.arc(p.a.x+(p.b.x-p.a.x)*p.t, p.a.y+(p.b.y-p.a.y)*p.t, 2, 0, Math.PI*2); ctx.fillStyle = 'rgba(234,96,144,0.9)'; ctx.fill(); });
+      if (++pulseTimer % 45 === 0) spawnPulse();
+      if (!reduced && running) requestAnimationFrame(draw);
+    }
+    draw();
+    document.addEventListener('visibilitychange', function(){ running = !document.hidden; if (running && !reduced) requestAnimationFrame(draw); });
+  }
+
+  /* Partition game */
+  var rounds = [
+    { title:'Bank ledger', answer:'CP',
+      scenario:'Account balances replicated across three nodes. A transfer arrives at node C while it is cut off from A and B. The same account could be debited on both sides.',
+      why:'A refused transfer is an apology; a double-spend is a lawsuit. Reject on the minority side, fail loudly, reconcile when the partition heals. Money is the canonical CP workload.' },
+    { title:'Shopping cart, peak sale', answer:'AP',
+      scenario:'Add-to-cart writes during a flash sale. Node C is partitioned. A refused cart update is a lost sale; a merged cart later is a mild annoyance.',
+      why:'This is the original Dynamo argument at Amazon: a lost add-to-cart costs more than merging two carts on heal. Accept on both sides, merge with a CRDT or vector clocks, never show the customer a 503.' },
+    { title:'Leader election / lock service', answer:'CP',
+      scenario:'A coordination service (think ZooKeeper or etcd) hands out leadership for a job scheduler. Node C is the current leader and just lost contact with the majority.',
+      why:'Two leaders is worse than zero leaders. C must step down the moment it cannot see a quorum, even though the scheduler is briefly unavailable. Every real coordination service makes this choice.' },
+    { title:'Subscription billing across 12 integrations', answer:'AP',
+      scenario:'The system I shipped at Oracle. Charge events flow through Kafka to a dozen downstream systems. A consumer is partitioned mid-batch and will retry. The risk is charging someone twice.',
+      why:'Accept and retry, but make every write idempotent: a Redis idempotency key per charge, saga compensation for anything partially applied. That gave +35% throughput with zero duplicate charges. Availability with a guardrail, not raw availability.' },
+    { title:'Warehouse robot loses Wi-Fi', answer:'AP',
+      scenario:'Twenty robots share an occupancy map through a fleet server. One drops off the network mid-aisle. Its local map and the shared map are about to diverge.',
+      why:'A robot that freezes because it cannot reach the fleet server is a robot blocking an aisle. Keep local autonomy, reconcile the map on reconnect. Safety-critical commands like e-stop go over a separate, consistent channel: the answer is per-channel, not per-system.' },
+    { title:'Policy weights to inference workers', answer:'CP',
+      scenario:'An RL trainer pushes a new policy to four vLLM workers over NCCL. The link to worker C stalls at the first update. Rollouts are queued and waiting.',
+      why:'Strictly this is version consistency, not textbook CAP, but the shape is the same. If C keeps serving the stale policy, its rollouts produce gradients for a policy you did not mean to run, and the training curve quietly degrades. Block the update until every worker is on the same version. This is the hang I spent weeks isolating.' },
+    { title:'DNS / config propagation', answer:'AP',
+      scenario:'Feature flags and DNS records replicated worldwide. A regional node is partitioned from the origin for ninety seconds. Reads keep arriving.',
+      why:'Serving a ninety-second-old record beats serving nothing. DNS, CDNs, and flag systems are eventually consistent on purpose, with TTLs as the reconciliation contract. Stale for seconds beats unavailable for seconds.' }
+  ];
+  var ri = 0, score = 0, answered = false;
+  var capA = $('capA'), capB = $('capB'), capC = $('capC'), capAv = $('capAv'), capBv = $('capBv'), capCv = $('capCv'), capCaption = $('capCaption');
+  var capAP = $('capAP'), capCP = $('capCP'), capAll = $('capAll'), capNext = $('capNext'), capFeedback = $('capFeedback');
+  var cutLinks = document.querySelectorAll('.cap-diagram .cutA, .cap-diagram .cutB');
+  function setNodes(state){
+    capA.setAttribute('class','node hot'); capB.setAttribute('class','node hot');
+    capAv.setAttribute('class','val'); capBv.setAttribute('class','val');
+    if (state === 'AP'){ capC.setAttribute('class','node hot'); capAv.textContent = capBv.textContent = 'v=13'; capCv.textContent = 'v=13*'; capCv.setAttribute('class','val stale'); capCaption.textContent = 'both sides accepted writes: C diverged'; }
+    else if (state === 'CP'){ capC.setAttribute('class','node down'); capAv.textContent = capBv.textContent = 'v=13'; capCv.textContent = '503'; capCv.setAttribute('class','val stale'); capCaption.textContent = 'minority side refused writes: C is stale but honest'; }
+    else { capC.setAttribute('class','node'); capAv.textContent = capBv.textContent = capCv.textContent = 'v=12'; capCv.setAttribute('class','val'); capCaption.textContent = 'partition: C cut off from A and B'; }
+  }
+  function loadRound(){
+    answered = false; var r = rounds[ri];
+    $('capRound').textContent = 'Round ' + (ri+1) + ' of ' + rounds.length;
+    $('capScore').textContent = ri === 0 ? '' : score + ' / ' + ri + ' so far';
+    $('capTitle').textContent = r.title; $('capScenario').textContent = r.scenario;
+    [capAP, capCP, capAll].forEach(function(b){ b.disabled = false; b.classList.remove('right','wrong'); });
+    capFeedback.className = 'cap-feedback'; capFeedback.innerHTML = '';
+    capNext.style.display = 'none';
+    cutLinks.forEach(function(l){ l.classList.add('cut'); });
+    setNodes('idle');
+  }
+  function choose(pick){
+    if (answered) return; answered = true;
+    var r = rounds[ri], right = pick === r.answer;
+    if (right) score++;
+    (pick === 'AP' ? capAP : capCP).classList.add(right ? 'right' : 'wrong');
+    if (!right) (r.answer === 'AP' ? capAP : capCP).classList.add('right');
+    capAP.disabled = capCP.disabled = capAll.disabled = true;
+    setNodes(pick);
+    capFeedback.className = 'cap-feedback show' + (right ? '' : ' miss');
+    capFeedback.innerHTML = '<b>' + (right ? 'Agreed.' : 'I would go the other way.') + '</b> ' + r.why;
+    capNext.textContent = ri === rounds.length - 1 ? 'See the verdict' : 'Next round';
+    capNext.style.display = 'inline-flex'; capNext.focus();
+  }
+  function finish(){
+    $('capPlay').style.display = 'none'; $('capFinal').classList.add('show');
+    var n = rounds.length, v;
+    if (score === n) v = n + ' / ' + n + '. You would pass my system design round.';
+    else if (score >= 5) v = score + ' / ' + n + '. Solid instincts. Argue the misses with me.';
+    else if (score >= 3) v = score + ' / ' + n + '. Reasonable; most of these are judgment calls, not facts.';
+    else v = score + ' / ' + n + '. The theorem is easy; the workloads are the hard part. Same for everyone.';
+    $('capVerdict').textContent = v;
+    $('capSummary').textContent = 'The pattern: money and coordination want consistency. Carts, caches, and robots that need to keep moving want availability. The best systems make the choice per channel, not per product.';
+    cutLinks.forEach(function(l){ l.classList.remove('cut'); });
+    setNodes('idle'); capC.setAttribute('class','node hot'); capCaption.textContent = 'partition healed';
+  }
+  if (capAP){
+    capAP.addEventListener('click', function(){ choose('AP'); });
+    capCP.addEventListener('click', function(){ choose('CP'); });
+    capAll.addEventListener('click', function(){
+      if (answered) return;
+      capAll.classList.remove('shake'); void capAll.offsetWidth; capAll.classList.add('shake');
+      capFeedback.className = 'cap-feedback show miss';
+      capFeedback.innerHTML = '<b>There is no third button.</b> That is the theorem. You get all three while the network is healthy; the question is only ever about what happens when it is not.';
+    });
+    capNext.addEventListener('click', function(){ if (ri === rounds.length - 1) finish(); else { ri++; loadRound(); } });
+    $('capRestart').addEventListener('click', function(){ ri = 0; score = 0; $('capFinal').classList.remove('show'); $('capPlay').style.display = 'block'; loadRound(); });
+    loadRound();
+  }
+
+  if (window.console && console.log){
+    console.log('%cOne HTML file. No framework, no analytics, no JS dependencies; the requests you see are two fonts and a PDF.', 'font-family:monospace;font-size:12px;color:#57D6C6');
+    console.log('%cIf a distributed system is misbehaving, I would like to hear about it: bhatkar3@illinois.edu', 'font-family:monospace;font-size:12px;color:#A3ACBC');
+  }
+})();
+</script>
+</body>
+</html>
