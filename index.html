@@ -106,7 +106,11 @@
   #topology{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
   .hero-scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,var(--bg) 0%,var(--bg) 28%,rgba(11,14,20,.55) 50%,rgba(11,14,20,.04) 72%);}
   @media (max-width:780px){.hero-scrim{background:linear-gradient(180deg,rgba(11,14,20,.35) 0%,var(--bg) 62%);}}
-  .hero-inner{position:relative;z-index:2;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);width:100%;flex:1;display:flex;flex-direction:column;justify-content:center;}
+  .hero-inner{position:relative;z-index:2;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gutter);width:100%;flex:1;display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;}
+  .hero-text{min-width:0;}
+  .hero-portrait{align-self:center;justify-self:end;}
+  .hero-portrait img{display:block;width:clamp(200px,21vw,260px);height:auto;border-radius:14px;border:1px solid var(--line-strong);}
+  @media (max-width:760px){.hero-inner{grid-template-columns:1fr;}.hero-portrait{display:none;}}
   .status-line{font-family:var(--font-mono);font-size:0.84rem;color:var(--text-dim);margin:0 0 1.5rem;display:flex;align-items:center;gap:0.6rem;}
   .status-line .pulse{width:7px;height:7px;border-radius:50%;background:#5FE07A;position:relative;flex:none;}
   .status-line .pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid #5FE07A;animation:pulsering 2.4s infinite;}
@@ -330,17 +334,25 @@
     <canvas id="topology" aria-hidden="true"></canvas>
     <div class="hero-scrim"></div>
     <div class="hero-inner">
-      <p class="status-line"><span class="pulse" aria-hidden="true"></span> Graduate Researcher, SSAIL at UIUC. Open to 2027 software engineering roles.</p>
-      <h1>
-        <span class="line"><span style="animation-delay:.05s">Making distributed</span></span>
-        <span class="line"><span style="animation-delay:.15s">systems agree with</span></span>
-        <span class="line"><span style="animation-delay:.25s">each other.</span></span>
-      </h1>
-      <p class="lede">Software engineer working on <b>distributed AI systems and ML infrastructure</b>: multi-GPU training and inference at UIUC's Supercomputing Systems &amp; AI Lab. Previously built production backend systems at Oracle handling 10M+ transactions a day.</p>
-      <div class="cta-row">
-        <a href="#work" class="btn btn-primary">View selected work</a>
-        <a href="assets/Shreyash_Bhatkar_Resume.pdf" class="btn btn-ghost" download="Shreyash_Bhatkar_Resume.pdf">Résumé (PDF)</a>
-        <span class="quiet"><a href="https://github.com/Shr3yash" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/shr3yash/" target="_blank" rel="noopener">LinkedIn</a></span>
+      <div class="hero-text">
+        <p class="status-line"><span class="pulse" aria-hidden="true"></span> Graduate Researcher, SSAIL at UIUC. Open to 2027 software engineering roles.</p>
+        <h1>
+          <span class="line"><span style="animation-delay:.05s">Making distributed</span></span>
+          <span class="line"><span style="animation-delay:.15s">systems agree with</span></span>
+          <span class="line"><span style="animation-delay:.25s">each other.</span></span>
+        </h1>
+        <p class="lede">Software engineer working on <b>distributed AI systems and ML infrastructure</b>: multi-GPU training and inference at UIUC's Supercomputing Systems &amp; AI Lab. Previously built production backend systems at Oracle handling 10M+ transactions a day.</p>
+        <div class="cta-row">
+          <a href="#work" class="btn btn-primary">View selected work</a>
+          <a href="assets/Shreyash_Bhatkar_Resume.pdf" class="btn btn-ghost" download="Shreyash_Bhatkar_Resume.pdf">Résumé (PDF)</a>
+          <span class="quiet"><a href="https://github.com/Shr3yash" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/shr3yash/" target="_blank" rel="noopener">LinkedIn</a></span>
+        </div>
+      </div>
+      <div class="hero-portrait">
+        <picture>
+          <source srcset="assets/portrait.webp" type="image/webp">
+          <img src="assets/portrait.png" alt="Shreyash Bhatkar at the Alma Mater statue, UIUC" width="520" height="650" loading="eager" decoding="async">
+        </picture>
       </div>
     </div>
     <div class="proof">
