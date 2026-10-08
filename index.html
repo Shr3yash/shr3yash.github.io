@@ -191,6 +191,11 @@
   .log-role .recog{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-faint);margin-top:0.8rem;}
   @media (max-width:700px){.log-entry{grid-template-columns:1fr;gap:0.6rem;}}
 
+  /* OPEN SOURCE */
+  #open-source .log-entry .when{color:var(--accent-2);padding-top:0.12rem;}
+  #open-source .log-role a{color:var(--accent-2);}
+  #open-source .log-role a:hover{color:var(--accent);}
+
   /* OTHER WORK */
   .other-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
   .other{border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;background:var(--bg-1);display:flex;flex-direction:column;transition:transform .3s var(--ease),border-color .3s;}
@@ -299,6 +304,7 @@
   </a>
   <ul class="nav-links">
     <li><a href="#work">Work</a></li>
+    <li><a href="#open-source">Open source</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#about">About</a></li>
@@ -318,6 +324,7 @@
 
 <div class="mobile-nav" id="mobileNav" hidden>
   <a href="#work">Work</a>
+  <a href="#open-source">Open source</a>
   <a href="#experience">Experience</a>
   <a href="#skills">Skills</a>
   <a href="#about">About</a>
@@ -526,6 +533,59 @@
           <figcaption>The two highlighted boxes are why retries are safe. The dashed edge is where the throughput problem actually lived.</figcaption>
         </figure>
       </article>
+    </div>
+  </section>
+
+  <section class="section" id="open-source">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Open source</h2>
+        <p>Upstream fixes in vLLM, verl, SGLang, JAX, and Tunix. Each one links to the pull request.</p>
+      </div>
+      <div class="log reveal">
+        <div class="log-entry">
+          <div class="when">vLLM</div>
+          <div class="log-role">
+            <ul>
+              <li>During speculative decoding, Model Runner V2 ran an independent draft model past its own context length, indexed past its rotary cache and KV cache, and later faulted with a CUDA illegal memory access. Ported V1's capacity gate so the draft is skipped when the batch doesn't fit, with a data-parallel all-reduce so ranks agree. <a href="https://github.com/vllm-project/vllm/pull/59517" target="_blank" rel="noopener">vllm#59517</a></li>
+              <li>Under speculative decoding, Model Runner V2 built the lm_head LoRA mapping with one id per request instead of one per logits row (the bonus row plus the draft rows), so an adapter could land on a neighboring request in a mixed batch. The row mapping now matches the logits layout. <a href="https://github.com/vllm-project/vllm/pull/59341" target="_blank" rel="noopener">vllm#59341</a></li>
+              <li>/v1/chat/completions silently dropped turns whose role the chat template doesn't render, such as a typo like 'usr', and still returned 200. It now returns a 400 naming the role, while custom roles the template does render keep working. <a href="https://github.com/vllm-project/vllm/pull/59108" target="_blank" rel="noopener">vllm#59108</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="when">verl</div>
+          <div class="log-role">
+            <ul>
+              <li>With FSDP merged LoRA and free_cache_engine, hybrid sleep at level 2 discarded vLLM weights that the PEFT-export sync never refilled, so rollouts turned to garbage with no error. FSDP merged LoRA now sleeps at level 1; Megatron is unchanged. <a href="https://github.com/verl-project/verl/pull/8046" target="_blank" rel="noopener">verl#8046</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="when">SGLang</div>
+          <div class="log-role">
+            <ul>
+              <li>Falcon-H1 with tied embeddings called .float() on the shared embedding in place, making it fp32 while the model was bf16, so fused RMSNorm crashed during server warmup. Tied heads now use tie_weights and keep fp32 logits via a matmul upcast. <a href="https://github.com/sgl-project/sglang/pull/41652" target="_blank" rel="noopener">sglang#41652</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="when">JAX</div>
+          <div class="log-role">
+            <ul>
+              <li>jax.scipy.special.rel_entr computed p*log(p) - p*log(q), which cancels when p is near q and returns nan for large equal inputs; kl_div inherited it and could go negative. It now uses the log1p formulation SciPy uses, with float32 and float64 checks in JAX's numerics suite. <a href="https://github.com/jax-ml/jax/pull/41260" target="_blank" rel="noopener">jax#41260</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="log-entry">
+          <div class="when">Google Tunix</div>
+          <div class="log-role">
+            <ul>
+              <li>The low_var_kl (Schulman K3) estimator exp(d)-d-1 could round negative in float32 near d=0. Switched to expm1(d)-d, which avoids the cancellation. <a href="https://github.com/google/tunix/pull/2638" target="_blank" rel="noopener">tunix#2638</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
